@@ -22,5 +22,5 @@ T-C ist ein leichtgewichtiger, regelkonformer Test-Crawler zur Überprüfung von
 - Warte ~1 Minute – `data.json` wird aktualisiert & Seite zeigt neue Inhalte
 
 ## 🔒 Hinweis
-Bitte beachte die robots.txt & Nutzungsbedingungen jeder Seite.
+Bitte beachte die robots.txt & Nutzungsbedingungen jeder Seite.  
 **Dieses Tool dient ausschließlich zu Test- und Forschungszwecken.**
