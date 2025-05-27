@@ -1,0 +1,88 @@
+import requests
+import json
+import time
+from bs4 import BeautifulSoup
+
+websites = [
+    "https://example1.com",
+    "https://example2.com",
+    "https://example3.com",
+    "https://example4.com",
+    "https://example5.com"
+]
+
+# Verbotsschlüsselwörter in Nutzungsbedingungen/AGB
+forbidden_terms = [
+    "Scraping verboten", 
+    "Keine automatisierte Analyse", 
+    "Datenextraktion untersagt", 
+    "Automatisiertes Crawling nicht erlaubt"
+]
+
+# User-Agent für Identifikation
+HEADERS = {
+    "User-Agent": "TestCrawler/1.0 (+https://deine-domain.de/botinfo)"
+}
+
+# Pfade zur Prüfung (reihenfolgeabhängig)
+policy_paths = ["/terms", "/nutzungsbedingungen", "/agb", "/privacy"]
+
+def fetch_robots_txt(url):
+    try:
+        response = requests.get(url + "/robots.txt", headers=HEADERS, timeout=5)
+        if response.status_code == 200:
+            txt = response.text
+            if "Disallow: /" in txt:
+                return "nicht erlaubt", txt
+            return "okay", txt
+        return "okay", "robots.txt nicht gefunden"
+    except:
+        return "okay", "robots.txt Fehler beim Abruf"
+
+def fetch_policy(url, paths):
+    for path in paths:
+        try:
+            response = requests.get(url + path, headers=HEADERS, timeout=5)
+            if response.status_code == 200:
+                soup = BeautifulSoup(response.text, "html.parser")
+                text = soup.get_text(separator=' ')
+                if any(term.lower() in text.lower() for term in forbidden_terms):
+                    return "nicht erlaubt", f"(Pfad: {path})\n" + text[:2000]  # Nur Ausschnitt
+                return "okay", f"(Pfad: {path})\n" + text[:2000]
+        except:
+            continue
+    return "okay", "Keine passenden Inhalte gefunden"
+
+data = []
+
+for site in websites:
+    print(f"Analysiere: {site}")
+    time.sleep(1)  # Rate limit
+
+    status_robots, robots_txt = fetch_robots_txt(site)
+    website_data = {
+        "website": site,
+        "robots_txt": {"status": status_robots, "content": robots_txt},
+        "terms": {"status": "nicht geprüft", "content": ""},
+        "agb": {"status": "nicht geprüft", "content": ""}
+    }
+
+    if status_robots == "okay":
+        time.sleep(1)
+        status_terms, terms_content = fetch_policy(site, policy_paths[:2])
+        website_data["terms"]["status"] = status_terms
+        website_data["terms"]["content"] = terms_content
+
+        if status_terms == "okay":
+            time.sleep(1)
+            status_agb, agb_content = fetch_policy(site, policy_paths[2:])
+            website_data["agb"]["status"] = status_agb
+            website_data["agb"]["content"] = agb_content
+
+    data.append(website_data)
+
+# Daten speichern
+with open("data.json", "w", encoding="utf-8") as f:
+    json.dump(data, f, indent=4, ensure_ascii=False)
+
+print("Analyse abgeschlossen. Ergebnisse in 'data.json'.")
