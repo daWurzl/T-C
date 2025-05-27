@@ -1,0 +1,17 @@
+[
+  {
+    "website": "https://example.com",
+    "robots_txt": {
+      "status": "okay",
+      "content": "User-agent: *\nDisallow:"
+    },
+    "terms": {
+      "status": "okay",
+      "content": "(Pfad: /terms)\nDies ist ein Beispieltext..."
+    },
+    "agb": {
+      "status": "nicht erlaubt",
+      "content": "(Pfad: /agb)\nAutomatisierte Datenanalyse untersagt..."
+    }
+  }
+]
