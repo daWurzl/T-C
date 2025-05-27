@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Informationen</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        .status {
+            font-weight: bold;
+            padding: 5px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+        .okay { color: green; }
+        .nicht-erlaubt { color: red; }
+        .content-section {
+            margin-top: 20px;
+        }
+        pre {
+            background: #eaeaea;
+            padding: 10px;
+            border-radius: 5px;
+            overflow: auto;
+            font-size: 14px;
+        }
+        .status.okay { color: green; }
+        .status.nicht-erlaubt { color: red; }
+        .status.nicht-geprüft { color: gray; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Website Informationen</h1>
+    <div id="content"></div>
+</div>
+
+<script>
+fetch('data.json')
+    .then(response => response.json())
+    .then(data => {
+        const contentDiv = document.getElementById('content');
+
+        data.forEach(site => {
+            let siteHtml = `
+                <div class="content-section">
+                    <h2>Website: ${site.website}</h2>
+                    <h3>robots.txt (Status: <span class="status ${site.robots_txt.status.replace(' ', '-')}">${site.robots_txt.status}</span>)</h3>
+                    <pre>${site.robots_txt.content}</pre>
+                </div>
+            `;
+
+            if (site.robots_txt.status === "okay") {
+                siteHtml += `
+                    <div class="content-section">
+                        <h3>Nutzungsbedingungen (Status: <span class="status ${site.terms.status.replace(' ', '-')}">${site.terms.status}</span>)</h3>
+                        <pre>${site.terms.content}</pre>
+                    </div>
+                `;
+                
+                if (site.terms.status === "okay") {
+                    siteHtml += `
+                        <div class="content-section">
+                            <h3>AGB (Status: <span class="status ${site.agb.status.replace(' ', '-')}">${site.agb.status}</span>)</h3>
+                            <pre>${site.agb.content}</pre>
+                        </div>
+                    `;
+                }
+            }
+            
+            contentDiv.innerHTML += siteHtml;
+        });
+    });
+</script>
+
+</body>
+</html>
