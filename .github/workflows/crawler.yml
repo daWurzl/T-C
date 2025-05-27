@@ -1,7 +1,7 @@
 # 🐍 GitHub Actions Workflow zum Ausführen des Crawlers
 
 # 📛 Anzeigename in der Actions-Oberfläche
-name: Run Crawler
+name: run crawler
 
 # 📅 Wann der Workflow ausgelöst wird
 # In diesem Fall: manuell über "Run workflow"-Button
