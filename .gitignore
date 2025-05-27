@@ -1,0 +1,10 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+
+# Crawler output
+data.json
+
+# VSCode & system files
+.vscode/
+.DS_Store
