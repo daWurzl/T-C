@@ -1,0 +1,53 @@
+# 🐍 GitHub Actions Workflow zum Ausführen des Crawlers
+
+# 📛 Anzeigename in der Actions-Oberfläche
+name: Run Crawler
+
+# 📅 Wann der Workflow ausgelöst wird
+# In diesem Fall: manuell über "Run workflow"-Button
+on:
+  workflow_dispatch:
+
+# 🛠️ Definition des Jobs
+jobs:
+  run-crawler:
+    # 📦 Laufumgebung: GitHub verwendet eine Linux-Maschine mit Ubuntu
+    runs-on: ubuntu-latest
+
+    # 📜 Schritte, die der Job ausführt
+    steps:
+      # 🔁 Schritt 1: Repository auschecken (damit Code & Dateien verfügbar sind)
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      # 🐍 Schritt 2: Python installieren (für den Crawler)
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'  # Wählt die neueste 3.x-Version
+
+      # 📦 Schritt 3: Benötigte Bibliotheken installieren
+      - name: Install dependencies
+        run: |
+          pip install requests beautifulsoup4
+
+      # 🧠 Schritt 4: Crawler-Skript ausführen
+      # Das Skript generiert eine neue `data.json` basierend auf Webseitenanalyse
+      - name: Run crawler script
+        run: python extract_info.py
+
+      # 💾 Schritt 5: Die neue `data.json` committen und pushen
+      - name: Commit updated data.json
+        run: |
+          # Git-Identität setzen (damit Git weiß, wer den Commit gemacht hat)
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Änderungen zur Commitliste hinzufügen
+          git add data.json
+
+          # Commit-Befehl: Wenn keine Änderungen → Fehler vermeiden durch '|| echo "No changes"'
+          git commit -m "Update data.json via crawler" || echo "No changes"
+
+          # Änderungen in das Repo zurückpushen
+          git push
