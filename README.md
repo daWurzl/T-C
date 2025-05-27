@@ -19,7 +19,7 @@ T-C ist ein leichtgewichtiger, regelkonformer Test-Crawler zur Überprüfung von
 ### ➤ 2. Crawler manuell starten
 - Gehe zu `Actions > Run Crawler`
 - Klicke auf **"Run workflow"**
-- Warte ~1 Minute – `data.json` wird aktualisiert & Seite zeigt neue Inhalte
+- Warte ~1 Minute – `data.json` wird aktualisiert und Seite zeigt neue Inhalte
 
 ## 🔒 Hinweis
 Bitte beachte die robots.txt und Nutzungsbedingungen jeder Seite.  
