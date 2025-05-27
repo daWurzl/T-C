@@ -23,4 +23,4 @@ T-C ist ein leichtgewichtiger, regelkonformer Test-Crawler zur Überprüfung von
 
 ## 🔒 Hinweis
 Bitte beachte die robots.txt & Nutzungsbedingungen jeder Seite.  
-**`Dieses Tool dient ausschließlich zu Test- und Forschungszwecken.`**
+**` Dieses Tool dient ausschließlich zu Test- und Forschungszwecken.`**
